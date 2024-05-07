@@ -43,7 +43,7 @@ div.content {
 
   max-width: 500px;
 
-  margin: 50px auto 0;
+  margin: 10vh auto 0;
 }
 
 h1 {
@@ -119,6 +119,10 @@ span.new {
 
 span.new:hover {
   color: #57a2d8;
+}
+
+p.error {
+  color: rgb(255, 127, 127);
 }
 
 p.contact-data {

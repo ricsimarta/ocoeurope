@@ -33,6 +33,7 @@ function createCaptcha() {
 function insertCaptcha() {
   const captchaData = createCaptcha();
   const captchaContainer = document.querySelector(".captcha");
+  let error = false;
 
   captchaContainer.innerHTML = `
     ${captchaData.text} = 
@@ -50,8 +51,9 @@ function insertCaptcha() {
     const userResult = document.querySelector("input.result").value;
     if (Number(userResult) === captchaData.result) {
       captchaContainer.remove();
+      document.querySelector("p.error")?.remove();
 
-      document.querySelector(".contact-text").innerText = "Mellékhatásbejelentéshez kérjük, vegye fel velünk a kapcsolatot:"
+      document.querySelector(".contact-text").innerText = "Mellékhatásbejelentéshez kérjük, vegye fel velünk a kapcsolatot:";
 
       document.querySelector(".contact").insertAdjacentHTML("beforeend", `
         <p class="contact-data">
@@ -59,11 +61,24 @@ function insertCaptcha() {
             <span class="material-symbols-outlined">mail</span>
             radmedpharma@radmedpharma.hu</a>
         </p>
-      `)
+      `);
+    }
+
+    else {
+      if (!error) {
+        captchaContainer.insertAdjacentHTML("afterend", `<p class="error">Rossz eredmény!</p>`);
+        error = true;
+      }
+
+      document.querySelector("input.result").value = null;
     }
   })
 
-  captchaContainer.querySelector("span.new").addEventListener("click", () => insertCaptcha());
+  captchaContainer.querySelector("span.new").addEventListener("click", () => {
+    insertCaptcha();
+    error = false;
+    document.querySelector("p.error")?.remove();
+  });
 }
 
 insertCaptcha();
