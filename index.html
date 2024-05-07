@@ -6,15 +6,167 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Onco-Europe</title>
 
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+
+      box-sizing: border-box;
+
+      font-size: inherit;
+      font-family: inherit;
+    }
+
+    body {
+      padding: 0 20px;
+
+      background-color: #124162;
+
+      color: #d9d9d9;
+
+      font-family: "Oswald", sans-serif;
+      font-optical-sizing: auto;
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    main {
+      max-width: 1200px;
+      min-height: 100vh;
+
+      margin: 0 auto;
+
+      padding: 20px;
+
+      border-left: 5px solid lightblue;
+      border-right: 5px solid lightblue;
+
+      text-align: center;
+    }
+
+    div.content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 60px;
+
+      max-width: 500px;
+
+      margin: 10vh auto 0;
+    }
+
+    h1 {
+      font-size: 36px;
+      max-width: 300px;
+    }
+
+    h1 span {
+      color: #a0c1d5;
+    }
+
+    p {
+      font-size: 20px;
+    }
+
+    div.main-text p {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0 5px;
+    }
+
+    div.contact {
+      margin-top: 50px;
+    }
+
+    h2 {
+      position: relative;
+
+      font-size: 24px;
+      font-weight: 700;
+      text-transform: uppercase;
+
+      margin-bottom: 10px;
+    }
+
+    h2::before {
+      content: "";
+      position: absolute;
+      top: -50px;
+      left: 50%;
+      transform: translateX(-50%);
+
+      width: calc(100vw - 200px);
+      max-width: 1000px;
+
+      border-top: 1px solid lightblue;
+    }
+
+    div.captcha {
+      display: flex;
+      flex-direction: row;
+      gap: 5px;
+      align-items: center;
+      justify-content: center;
+
+      margin-top: 10px;
+    }
+
+    div.captcha input {
+      max-width: 30px;
+      padding: 0 5px;
+    }
+
+    button.solve {
+      padding: 0 5px;
+    }
+
+    span.new {
+      cursor: pointer;
+      margin-left: 5px;
+    }
+
+    span.new:hover {
+      color: #57a2d8;
+    }
+
+    p.error {
+      color: rgb(255, 127, 127);
+    }
+
+    p.contact-data {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+
+      margin-top: 10px;
+    }
+
+    p.contact-data a {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 5px;
+
+      color: #a0c1d5;
+      text-decoration: none;
+    }
+
+    p.contact-data a:hover {
+      color: #57a2d8;
+    }
+
+    p.contact-data a span {
+      margin-top: 4px;
+    }
+  </style>
 </head>
 
 <body>
@@ -25,10 +177,11 @@
 
       <div class="main-text">
         <p>
-          Weboldalunk jelenleg átalakítás 
+          Weboldalunk jelenleg átalakítás
           <span>alatt áll.</span>
         </p>
-        <p>Mellékhatásbejelentéshez kötődő ügyekben, kérjük, vegye fel velünk a kapcsolatot a lenti elérhetőségek egyikén.</p>
+        <p>Mellékhatásbejelentéshez kötődő ügyekben, kérjük, vegye fel velünk a kapcsolatot a lenti elérhetőségek
+          egyikén.</p>
       </div>
 
       <div class="contact">
@@ -37,11 +190,98 @@
         <p class="contact-text">Mellékhatásbejelentéshez kérjük, oldja meg a lenti feladványt:</p>
 
         <div class="captcha">
-          
+
         </div>
       </div>
     </div>
   </main>
+
+  <script>
+    function createCaptcha() {
+      let firstNumber = Math.floor((Math.random() * 10) + 1);
+      let secondNumber = Math.floor((Math.random() * 10) + 1);
+
+      if (secondNumber > firstNumber) {
+        const temp = firstNumber;
+        firstNumber = secondNumber;
+        secondNumber = temp;
+      }
+
+      const operationNumber = Math.floor((Math.random() * 2) + 1);
+
+      let operation = null;
+      let result = null;
+
+      switch (operationNumber) {
+        case 1:
+          operation = "+";
+          result = firstNumber + secondNumber;
+          break;
+        case 2:
+          operation = "-";
+          result = firstNumber - secondNumber;
+          break;
+      }
+
+      return {
+        text: `${firstNumber} ${operation} ${secondNumber}`,
+        result: result
+      }
+    }
+
+    function insertCaptcha() {
+      const captchaData = createCaptcha();
+      const captchaContainer = document.querySelector(".captcha");
+      let error = false;
+
+      captchaContainer.innerHTML = `
+        ${captchaData.text} = 
+        <input type="text" name="captcha-result" class="result"/> 
+        <button class="solve">Küld</button>
+        <span class="material-symbols-outlined new">refresh</span>
+      `;
+
+      const resultInputElement = document.querySelector("input.result");
+      resultInputElement.addEventListener("input", e => {
+        if (!e.data?.match(/[0-9]/) || e.target.value.length > 2) e.target.value = e.target.value.slice(0, -1);
+      })
+
+      captchaContainer.querySelector("button.solve").addEventListener("click", () => {
+        const userResult = document.querySelector("input.result").value;
+        if (Number(userResult) === captchaData.result) {
+          captchaContainer.remove();
+          document.querySelector("p.error")?.remove();
+
+          document.querySelector(".contact-text").innerText = "Mellékhatásbejelentéshez kérjük, vegye fel velünk a kapcsolatot:";
+
+          document.querySelector(".contact").insertAdjacentHTML("beforeend", `
+            <p class="contact-data">
+              <a href="mailto:radmedpharma@radmedpharma.hu">
+                <span class="material-symbols-outlined">mail</span>
+                radmedpharma@radmedpharma.hu</a>
+            </p>
+          `);
+        }
+
+        else {
+          if (!error) {
+            captchaContainer.insertAdjacentHTML("afterend", `<p class="error">Rossz eredmény!</p>`);
+            error = true;
+          }
+
+          document.querySelector("input.result").value = null;
+        }
+      })
+
+      captchaContainer.querySelector("span.new").addEventListener("click", () => {
+        insertCaptcha();
+        error = false;
+        document.querySelector("p.error")?.remove();
+      });
+    }
+
+    insertCaptcha();
+  </script>
 </body>
 
 </html>
